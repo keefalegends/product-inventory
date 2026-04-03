@@ -30,7 +30,7 @@ Masuk ke: **Configuration → Software → Environment Properties**, tambahkan:
 | Key            | Value                          |
 |----------------|-------------------------------|
 | NODE_ENV       | production                    |
-| RDS_HOSTNAME   | (endpoint RDS lo)             |
+| RDS_HOSTNAME   | (endpoint RDS)                |
 | RDS_PORT       | 5432                          |
 | RDS_DB_NAME    | inventory                     |
 | RDS_USERNAME   | (username RDS)                |
