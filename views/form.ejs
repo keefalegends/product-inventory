@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= product ? 'Edit Product' : 'Add Product' %> — INVNTRY</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <a href="/products" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:10px;">
+        <span class="logo-icon">▣</span>
+        <span>INVNTRY</span>
+      </a>
+    </div>
+    <a href="/products" class="btn-back">← Back</a>
+  </div>
+</header>
+
+<main class="form-main">
+  <div class="form-container">
+    <h1 class="form-title"><%= product ? 'Edit Product' : 'New Product' %></h1>
+
+    <% if (typeof error !== 'undefined' && error) { %>
+      <div class="alert-error"><%= error %></div>
+    <% } %>
+
+    <form method="POST" action="<%= action %>" class="product-form">
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="name">Product Name *</label>
+          <input type="text" id="name" name="name" required
+            value="<%= product ? product.name : '' %>"
+            placeholder="e.g. Wireless Mouse">
+        </div>
+        <div class="form-group">
+          <label for="sku">SKU</label>
+          <input type="text" id="sku" name="sku"
+            value="<%= product ? (product.sku || '') : '' %>"
+            placeholder="e.g. WM-001">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="category">Category</label>
+          <input type="text" id="category" name="category"
+            value="<%= product ? (product.category || '') : '' %>"
+            placeholder="e.g. Electronics">
+        </div>
+        <div class="form-group">
+          <label for="quantity">Quantity *</label>
+          <input type="number" id="quantity" name="quantity" required min="0"
+            value="<%= product ? product.quantity : 0 %>"
+            placeholder="0">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="price">Price (USD) *</label>
+          <input type="number" id="price" name="price" required min="0" step="0.01"
+            value="<%= product ? parseFloat(product.price).toFixed(2) : '' %>"
+            placeholder="0.00">
+        </div>
+      </div>
+
+      <div class="form-group full-width">
+        <label for="description">Description</label>
+        <textarea id="description" name="description" rows="4"
+          placeholder="Optional product description..."><%= product ? (product.description || '') : '' %></textarea>
+      </div>
+
+      <div class="form-actions">
+        <a href="/products" class="btn-cancel">Cancel</a>
+        <button type="submit" class="btn-primary">
+          <%= product ? 'Save Changes' : 'Add Product' %>
+        </button>
+      </div>
+
+    </form>
+  </div>
+</main>
+
+</body>
+</html>

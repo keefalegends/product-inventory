@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inventory Manager</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <span class="logo-icon">▣</span>
+      <span>INVNTRY</span>
+    </div>
+    <a href="/products/new" class="btn-primary">+ Add Product</a>
+  </div>
+</header>
+
+<main>
+  <!-- Stats Bar -->
+  <section class="stats-bar">
+    <div class="stat-card">
+      <span class="stat-label">Total Products</span>
+      <span class="stat-value"><%= stats.total_products %></span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Total Stock</span>
+      <span class="stat-value"><%= parseInt(stats.total_stock) || 0 %></span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Inventory Value</span>
+      <span class="stat-value">$<%= parseFloat(stats.total_value || 0).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}) %></span>
+    </div>
+    <div class="stat-card stat-warn">
+      <span class="stat-label">Out of Stock</span>
+      <span class="stat-value"><%= stats.out_of_stock %></span>
+    </div>
+  </section>
+
+  <!-- Filters -->
+  <section class="filters">
+    <form method="GET" action="/products" class="filter-form">
+      <input
+        type="text"
+        name="search"
+        placeholder="Search by name or SKU..."
+        value="<%= search %>"
+        class="input-search"
+      />
+      <select name="category" class="input-select">
+        <option value="">All Categories</option>
+        <% categories.forEach(c => { %>
+          <option value="<%= c.category %>" <%= category === c.category ? 'selected' : '' %>>
+            <%= c.category %>
+          </option>
+        <% }) %>
+      </select>
+      <button type="submit" class="btn-filter">Filter</button>
+      <% if (search || category) { %>
+        <a href="/products" class="btn-clear">Clear</a>
+      <% } %>
+    </form>
+  </section>
+
+  <!-- Table -->
+  <section class="table-section">
+    <% if (products.length === 0) { %>
+      <div class="empty-state">
+        <div class="empty-icon">📦</div>
+        <p>No products found.</p>
+        <a href="/products/new" class="btn-primary">Add your first product</a>
+      </div>
+    <% } else { %>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>SKU</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Qty</th>
+            <th>Price</th>
+            <th>Value</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% products.forEach(p => { %>
+          <tr class="<%= p.quantity === 0 ? 'row-oos' : '' %>">
+            <td><span class="sku"><%= p.sku || '—' %></span></td>
+            <td class="td-name">
+              <%= p.name %>
+              <% if (p.description) { %>
+                <span class="desc"><%= p.description.substring(0, 60) %><%= p.description.length > 60 ? '…' : '' %></span>
+              <% } %>
+            </td>
+            <td><% if(p.category){ %><span class="badge"><%= p.category %></span><% } else { %>—<% } %></td>
+            <td>
+              <span class="qty <%= p.quantity === 0 ? 'qty-zero' : p.quantity < 10 ? 'qty-low' : 'qty-ok' %>">
+                <%= p.quantity %>
+              </span>
+            </td>
+            <td class="td-mono">$<%= parseFloat(p.price).toFixed(2) %></td>
+            <td class="td-mono">$<%= (parseFloat(p.price) * p.quantity).toFixed(2) %></td>
+            <td class="td-actions">
+              <a href="/products/<%= p.id %>/edit" class="btn-edit">Edit</a>
+              <form method="POST" action="/products/<%= p.id %>?_method=DELETE" onsubmit="return confirm('Delete this product?')">
+                <button type="submit" class="btn-delete">Delete</button>
+              </form>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+    <% } %>
+  </section>
+</main>
+
+</body>
+</html>
